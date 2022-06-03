@@ -1,43 +1,31 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace NK.StateMachine
 {
-    [CreateAssetMenu(menuName = "NKTools/Finite State Machine/New State", fileName = "NewState")]
-    public sealed class NKState : ScriptableObject, INKState
+    public abstract class NKState
     {
-        public List<NKAction> Actions = new List<NKAction>();
-        public List<NKTransition> Transitions = new List<NKTransition>();
+        protected NKStateMachine m_StateMachine;
 
-        public void Enter(NKStateMachine stateMachine)
+        protected NKState(NKStateMachine stateMachine)
         {
-            Actions.ForEach(a => a.Enter(stateMachine));
+            m_StateMachine = stateMachine;
         }
 
-        public void Execute(NKStateMachine stateMachine)
-        {
-            Actions.ForEach(a => a.Execute(stateMachine));
-            Transitions.ForEach(t => t.Check(stateMachine));
-        }
+        public virtual void Enter() {}
+        public virtual void Update() {}
+        public virtual void FixedUpdate() {}
+        public virtual void LateUpdate() {}
+        public virtual void Exit() {}
+    }
 
-        public void ExecuteFixed(NKStateMachine stateMachine)
-        {
-            Actions.ForEach(a => a.ExecuteFixed(stateMachine));
-        }
+    public class NKState<TBlackboard> : NKState
+        where TBlackboard : ScriptableObject
+    {
+        protected TBlackboard m_Blackboard;
 
-        public void ExecuteLate(NKStateMachine stateMachine)
+        public NKState(NKStateMachine stateMachine, TBlackboard blackboard) : base(stateMachine)
         {
-            Actions.ForEach(a => a.ExecuteLate(stateMachine));
-        }
-
-        public void Exit(NKStateMachine stateMachine)
-        {
-            Actions.ForEach(a => a.Exit(stateMachine));
-        }
-
-        public void SortTransitions()
-        {
-            Transitions.Sort((t1, t2) => t2.Priority.CompareTo(t1.Priority));
+            m_Blackboard = blackboard;
         }
     }
 }

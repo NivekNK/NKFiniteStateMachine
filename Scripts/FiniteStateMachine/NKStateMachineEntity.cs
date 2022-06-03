@@ -2,32 +2,30 @@ using UnityEngine;
 
 namespace NK.StateMachine
 {
-    public sealed class NKStateMachineEntity : MonoBehaviour
+    public abstract class NKStateMachineEntity<TBlackboard> : MonoBehaviour
+         where TBlackboard : ScriptableObject
     {
-        [SerializeField] private NKStateMachine m_StateMachine;
+        public TBlackboard Blackboard;
+        public NKStateMachine StateMachine { get; private set; }
 
-        private void Awake()
+        public virtual void Awake()
         {
-            if (m_StateMachine != null)
-                m_StateMachine.Initialize();
+            StateMachine = new NKStateMachine();
         }
 
-        private void Update()
+        public virtual void Update()
         {
-            if (m_StateMachine != null)
-                m_StateMachine.Execute();
+            StateMachine.CurrentState?.Update();
         }
 
-        private void FixedUpdate()
+        public virtual void FixedUpdate()
         {
-            if (m_StateMachine != null)
-                m_StateMachine.ExecuteFixed();
+            StateMachine.CurrentState?.FixedUpdate();
         }
 
-        private void LateUpdate()
+        public virtual void LateUpdate()
         {
-            if (m_StateMachine != null)
-                m_StateMachine.ExecuteLate();
+            StateMachine.CurrentState?.LateUpdate();
         }
     }
 }

@@ -1,7 +1,9 @@
 {
     "name": "NK.StateMachine",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:c52a3e3d06f3495469b26d47fec41de7"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
